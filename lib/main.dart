@@ -13,6 +13,7 @@ class MyApp extends StatelessWidget {
       ),
       home: Scaffold(
         appBar: AppBar(title: Text('After Todos')),
+        backgroundColor: Colors.deepPurple,
         body: BodyLayout(),
       ),
     );
@@ -45,46 +46,61 @@ class BodyLayoutState extends State<BodyLayout> {
   @override
   Widget build(BuildContext context) {
     return SafeArea(
-      child: Column(
-        children: <Widget>[
-          Flexible(
-            child: AnimatedList(
-              key: _listKey,
-              initialItemCount: _data.length,
-              itemBuilder: (context, index, animation) {
-                return _buildItem(_data[index], index, animation);
-              },
+      child: Container(
+        decoration: BoxDecoration(
+          color: Colors.white,
+        ),
+        child: Column(
+          children: <Widget>[
+            Flexible(
+              child: AnimatedList(
+                key: _listKey,
+                initialItemCount: _data.length,
+                itemBuilder: (context, index, animation) {
+                  return _buildItem(_data[index], index, animation);
+                },
+              ),
             ),
-          ),
-          Container(
-            margin: EdgeInsets.all(10),
-            child: Row(
-              children: <Widget>[
-                Flexible(
-                  child: TextField(
-                    controller: _textController,
-                    focusNode: todoInputFocusNode,
-                    onSubmitted: _insertSingleItem,
-                    decoration: InputDecoration(
-                      contentPadding: EdgeInsets.all(10),
-                      hintText: 'What to do?'
+            Container(
+              padding: EdgeInsets.fromLTRB(10, 0, 10, 0),
+              decoration: BoxDecoration(
+                color: Colors.deepPurple,
+              ),
+              child: Row(
+                children: <Widget>[
+                  Flexible(
+                    child: TextField(
+                      keyboardType: TextInputType.text,
+                      style: TextStyle(
+                        color: Colors.white,
+                      ),
+                      decoration: InputDecoration(
+                        contentPadding: EdgeInsets.all(10),
+                        hintText: 'What to do?',
+                        hintStyle: TextStyle(
+                          color: Colors.white,
+                        ),
+                      ),
+                      cursorColor: Colors.white,
+                      controller: _textController,
+                      focusNode: todoInputFocusNode,
+                      onSubmitted: _insertSingleItem,
                     ),
                   ),
-                ),
-                Container(
-                  margin: EdgeInsets.all(5),
-                  child: IconButton(
-                    onPressed: () => _insertSingleItem(_textController.text),
-                    icon: Icon(
-                      Icons.send,
-                      color: Colors.deepPurpleAccent,
+                  Container(
+                    child: IconButton(
+                      onPressed: () => _insertSingleItem(_textController.text),
+                      icon: Icon(
+                        Icons.send,
+                        color: Colors.white,
+                      ),
                     ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
@@ -95,7 +111,7 @@ class BodyLayoutState extends State<BodyLayout> {
       child: Card(
         child: ListTile(
           title: Text(
-            item,
+            '${(index + 1).toString()}. $item',
             style: TextStyle(fontSize: 20),
           ),
           onLongPress: () => _removeSingleItem(index),
