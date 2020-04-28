@@ -29,16 +29,19 @@ class BodyLayout extends StatelessWidget {
 // replace this function with the code in the examples
 Widget _myListView(BuildContext context) {
   return ListView(
-    children: <Widget>[
-      ListTile(
-        title: Text('Sun'),
-      ),
-      ListTile(
-        title: Text('Moon'),
-      ),
-      ListTile(
-        title: Text('Star'),
-      ),
-    ],
+    children: ListTile.divideTiles(
+      context: context,
+      tiles: [
+        ListTile(
+          title: Text('Sun'),
+        ),
+        ListTile(
+          title: Text('Moon'),
+        ),
+        ListTile(
+          title: Text('Star'),
+        ),
+      ],
+    ).toList(),
   );
 }
