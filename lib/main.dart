@@ -28,14 +28,20 @@ class BodyLayout extends StatelessWidget {
 
 // replace this function with the code in the examples
 Widget _myListView(BuildContext context) {
-  return ListView.builder(
-    scrollDirection: Axis.horizontal,
-    itemBuilder: (context, index) {
-      return Container(
-        margin: const EdgeInsets.symmetric(horizontal: 1.0),
-        color: Colors.tealAccent,
-        child: Text('$index'),
-      );
-    },
+  return ListView(
+    children: <Widget>[
+      ListTile(
+        leading: Icon(Icons.wb_sunny),
+        title: Text('Sun'),
+      ),
+      ListTile(
+        leading: Icon(Icons.brightness_3),
+        title: Text('Moon'),
+      ),
+      ListTile(
+        leading: Icon(Icons.star),
+        title: Text('Star'),
+      ),
+    ],
   );
 }
