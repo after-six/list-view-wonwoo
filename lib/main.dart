@@ -35,18 +35,21 @@ Widget _myListView(BuildContext context) {
           backgroundImage: AssetImage('assets/sun.jpeg'),
         ),
         title: Text('Sun'),
+        subtitle: Text('93 million miles away'),
       ),
       ListTile(
         leading: CircleAvatar(
           backgroundImage: AssetImage('assets/moon.jpeg'),
         ),
         title: Text('Moon'),
+        subtitle: Text('9.3 million miles away'),
       ),
       ListTile(
         leading: CircleAvatar(
           backgroundImage: AssetImage('assets/stars.jpeg'),
         ),
         title: Text('Star'),
+        subtitle: Text('930 million miles away'),
       ),
     ],
   );
