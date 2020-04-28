@@ -28,15 +28,14 @@ class BodyLayout extends StatelessWidget {
 
 // replace this function with the code in the examples
 Widget _myListView(BuildContext context) {
-  return ListView.separated(
-    itemCount: 1000,
+  return ListView.builder(
+    scrollDirection: Axis.horizontal,
     itemBuilder: (context, index) {
-      return ListTile(
-        title: Text('row $index'),
+      return Container(
+        margin: const EdgeInsets.symmetric(horizontal: 1.0),
+        color: Colors.tealAccent,
+        child: Text('$index'),
       );
-    },
-    separatorBuilder: (context, index) {
-      return Divider();
     },
   );
 }
