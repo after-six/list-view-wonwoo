@@ -31,19 +31,22 @@ Widget _myListView(BuildContext context) {
   return ListView(
     children: <Widget>[
       ListTile(
-        leading: Icon(Icons.wb_sunny),
+        leading: CircleAvatar(
+          backgroundImage: AssetImage('assets/sun.jpeg'),
+        ),
         title: Text('Sun'),
-        trailing: Icon(Icons.keyboard_arrow_right),
       ),
       ListTile(
-        leading: Icon(Icons.brightness_3),
+        leading: CircleAvatar(
+          backgroundImage: AssetImage('assets/moon.jpeg'),
+        ),
         title: Text('Moon'),
-        trailing: Icon(Icons.keyboard_arrow_right),
       ),
       ListTile(
-        leading: Icon(Icons.star),
+        leading: CircleAvatar(
+          backgroundImage: AssetImage('assets/stars.jpeg'),
+        ),
         title: Text('Star'),
-        trailing: Icon(Icons.keyboard_arrow_right),
       ),
     ],
   );
