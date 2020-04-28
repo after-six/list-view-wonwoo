@@ -28,29 +28,35 @@ class BodyLayout extends StatelessWidget {
 
 // replace this function with the code in the examples
 Widget _myListView(BuildContext context) {
-  return ListView(
-    children: <Widget>[
-      ListTile(
-        title: Text('Sun'),
-        trailing: Icon(Icons.keyboard_arrow_right),
-        onTap: () {
-          print('Sun');
-        },
-      ),
-      ListTile(
-        title: Text('Moon'),
-        trailing: Icon(Icons.keyboard_arrow_right),
-        onTap: () {
-          print('Moon');
-        },
-      ),
-      ListTile(
-        title: Text('Star'),
-        trailing: Icon(Icons.keyboard_arrow_right),
-        onTap: () {
-          print('Star');
-        },
-      ),
-    ],
+  Widget column = Expanded(
+    child: Column(
+      // align the text to the left instead of centered
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: <Widget>[
+        Text('Title', style: TextStyle(fontSize: 16),),
+        Text('subtitle'),
+      ],
+    ),
+  );
+
+  return ListView.builder(
+    itemBuilder: (context, index) {
+      return Card(
+        child: InkWell(
+          onTap: () {
+            print('tapped');
+          },
+          child: Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Row(
+              children: <Widget>[
+                column,
+                column,
+              ],
+            ),
+          ),
+        ),
+      );
+    },
   );
 }
