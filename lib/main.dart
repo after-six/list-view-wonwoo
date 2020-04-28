@@ -9,13 +9,10 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       title: 'ListViews',
       theme: ThemeData(
-        primarySwatch: Colors.deepPurple,
+        primarySwatch: Colors.primaries[13],
+        secondaryHeaderColor: Colors.primaries[13],
       ),
-      home: Scaffold(
-        appBar: AppBar(title: Text('After Todos')),
-        backgroundColor: Colors.deepPurple,
-        body: BodyLayout(),
-      ),
+      home: BodyLayout(),
     );
   }
 }
@@ -30,6 +27,7 @@ class BodyLayoutState extends State<BodyLayout> {
   final TextEditingController _textController = TextEditingController();
   List<String> _data = [];
   FocusNode todoInputFocusNode;
+  bool isSendDisable = true;
 
   @override
   void initState() {
@@ -45,61 +43,63 @@ class BodyLayoutState extends State<BodyLayout> {
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: Container(
-        decoration: BoxDecoration(
-          color: Colors.white,
-        ),
-        child: Column(
-          children: <Widget>[
-            Flexible(
-              child: AnimatedList(
-                key: _listKey,
-                initialItemCount: _data.length,
-                itemBuilder: (context, index, animation) {
-                  return _buildItem(_data[index], index, animation);
-                },
+    return Scaffold(
+      appBar: AppBar(title: Text('After Todos')),
+      backgroundColor: Theme.of(context).secondaryHeaderColor,
+      body: SafeArea(
+        child: Container(
+          decoration: BoxDecoration(
+            color: Colors.white,
+          ),
+          child: Column(
+            children: <Widget>[
+              Flexible(
+                child: AnimatedList(
+                  key: _listKey,
+                  initialItemCount: _data.length,
+                  itemBuilder: (context, index, animation) {
+                    return _buildItem(_data[index], index, animation);
+                  },
+                ),
               ),
-            ),
-            Container(
-              padding: EdgeInsets.fromLTRB(10, 0, 10, 0),
-              decoration: BoxDecoration(
-                color: Colors.deepPurple,
-              ),
-              child: Row(
-                children: <Widget>[
-                  Flexible(
-                    child: TextField(
-                      keyboardType: TextInputType.text,
-                      style: TextStyle(
-                        color: Colors.white,
+              Container(
+                padding: EdgeInsets.fromLTRB(10, 0, 10, 0),
+                decoration: BoxDecoration(
+                  color: Theme.of(context).secondaryHeaderColor,
+                ),
+                child: Row(
+                  children: <Widget>[
+                    Flexible(
+                      child: TextField(
+                        keyboardType: TextInputType.text,
+                        decoration: InputDecoration(
+                          contentPadding: EdgeInsets.all(10),
+                          hintText: 'What to do?',
+                          border: InputBorder.none,
+                        ),
+                        cursorColor: Colors.black,
+                        controller: _textController,
+                        focusNode: todoInputFocusNode,
+                        onSubmitted: !isSendDisable ? _insertSingleItem : null,
+                        onChanged: (text) => setState(() {
+                          isSendDisable = text.length > 0 ? false : true;
+                        }),
                       ),
-                      decoration: InputDecoration(
-                        contentPadding: EdgeInsets.all(10),
-                        hintText: 'What to do?',
-                        hintStyle: TextStyle(
-                          color: Colors.white,
+                    ),
+                    Container(
+                      child: IconButton(
+                        onPressed: () => !isSendDisable ? _insertSingleItem(_textController.text) : null,
+                        icon: Icon(
+                          Icons.send,
+                          color: isSendDisable ? Colors.black12 : Colors.black,
                         ),
                       ),
-                      cursorColor: Colors.white,
-                      controller: _textController,
-                      focusNode: todoInputFocusNode,
-                      onSubmitted: _insertSingleItem,
                     ),
-                  ),
-                  Container(
-                    child: IconButton(
-                      onPressed: () => _insertSingleItem(_textController.text),
-                      icon: Icon(
-                        Icons.send,
-                        color: Colors.white,
-                      ),
-                    ),
-                  ),
-                ],
+                  ],
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );
@@ -122,14 +122,13 @@ class BodyLayoutState extends State<BodyLayout> {
 
   void _insertSingleItem(text) {
     _textController.clear();
-    todoInputFocusNode.requestFocus();
-
-    if (text.length < 1) {
-      return;
-    }
-
     _data.insert(0, text);
     _listKey.currentState.insertItem(0);
+    todoInputFocusNode.requestFocus();
+
+    setState(() {
+      isSendDisable = true;
+    });
   }
 
   void _removeSingleItem(index) {
