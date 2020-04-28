@@ -19,44 +19,41 @@ class MyApp extends StatelessWidget {
   }
 }
 
-class BodyLayout extends StatelessWidget {
+class BodyLayout extends StatefulWidget {
   @override
-  Widget build(BuildContext context) {
-    return _myListView(context);
-  }
+  BodyLayoutState createState() => BodyLayoutState();
 }
 
-// replace this function with the code in the examples
-Widget _myListView(BuildContext context) {
-  Widget column = Expanded(
-    child: Column(
-      // align the text to the left instead of centered
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: <Widget>[
-        Text('Title', style: TextStyle(fontSize: 16),),
-        Text('subtitle'),
-      ],
-    ),
-  );
+class BodyLayoutState extends State<BodyLayout> {
 
-  return ListView.builder(
-    itemBuilder: (context, index) {
-      return Card(
-        child: InkWell(
-          onTap: () {
-            print('tapped');
-          },
-          child: Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Row(
-              children: <Widget>[
-                column,
-                column,
-              ],
-            ),
+  List<String> titles = ['Sun', 'Moon', 'Star'];
+
+  @override
+  Widget build(BuildContext context) {
+    return _myListView();
+  }
+
+  Widget _myListView() {
+    return ListView.builder(
+      itemCount: titles.length,
+      itemBuilder: (context, index) {
+        final item = titles[index];
+        return Card(
+          child: ListTile(
+            title: Text(item),
+            onTap: () {
+              setState(() {
+                titles.insert(index, 'Planet');
+              });
+            },
+            onLongPress: () {
+              setState(() {
+                titles.removeAt(index);
+              });
+            },
           ),
-        ),
-      );
-    },
-  );
+        );
+      },
+    );
+  }
 }
