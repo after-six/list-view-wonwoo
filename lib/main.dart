@@ -9,10 +9,10 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       title: 'ListViews',
       theme: ThemeData(
-        primarySwatch: Colors.teal,
+        primarySwatch: Colors.deepPurple,
       ),
       home: Scaffold(
-        appBar: AppBar(title: Text('ListViews')),
+        appBar: AppBar(title: Text('After Todos')),
         body: BodyLayout(),
       ),
     );
@@ -25,51 +25,71 @@ class BodyLayout extends StatefulWidget {
 }
 
 class BodyLayoutState extends State<BodyLayout> {
-
-  // The GlobalKey keeps track of the visible state of the list items
-  // while they are being animated.
   final GlobalKey<AnimatedListState> _listKey = GlobalKey();
+  final TextEditingController _textController = TextEditingController();
+  List<String> _data = [];
+  FocusNode todoInputFocusNode;
 
-  // backing data
-  List<String> _data = ['Sun', 'Moon', 'Star'];
+  @override
+  void initState() {
+    super.initState();
+    todoInputFocusNode = FocusNode();
+  }
+
+  @override
+  void dispose() {
+    todoInputFocusNode.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: <Widget>[
-        SizedBox(
-          height: 300,
-          child: AnimatedList(
-            // Give the Animated list the global key
-            key: _listKey,
-            initialItemCount: _data.length,
-            // Similar to ListView itemBuilder, but AnimatedList has
-            // an additional animation parameter.
-            itemBuilder: (context, index, animation) {
-              // Breaking the row widget out as a method so that we can
-              // share it with the _removeSingleItem() method.
-              return _buildItem(_data[index], animation);
-            },
+    return SafeArea(
+      child: Column(
+        children: <Widget>[
+          Flexible(
+            child: AnimatedList(
+              key: _listKey,
+              initialItemCount: _data.length,
+              itemBuilder: (context, index, animation) {
+                return _buildItem(_data[index], index, animation);
+              },
+            ),
           ),
-        ),
-        RaisedButton(
-          child: Text('Insert item', style: TextStyle(fontSize: 20)),
-          onPressed: () {
-            _insertSingleItem();
-          },
-        ),
-        RaisedButton(
-          child: Text('Remove item', style: TextStyle(fontSize: 20)),
-          onPressed: () {
-            _removeSingleItem();
-          },
-        )
-      ],
+          Container(
+            margin: EdgeInsets.all(10),
+            child: Row(
+              children: <Widget>[
+                Flexible(
+                  child: TextField(
+                    controller: _textController,
+                    focusNode: todoInputFocusNode,
+                    onSubmitted: _insertSingleItem,
+                    decoration: InputDecoration(
+                      contentPadding: EdgeInsets.all(10),
+                      hintText: 'What to do?'
+                    ),
+                  ),
+                ),
+                Container(
+                  margin: EdgeInsets.all(5),
+                  child: IconButton(
+                    onPressed: () => _insertSingleItem(_textController.text),
+                    icon: Icon(
+                      Icons.send,
+                      color: Colors.deepPurpleAccent,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
     );
   }
 
-  // This is the animated row with the Card.
-  Widget _buildItem(String item, Animation animation) {
+  Widget _buildItem(String item, int index, Animation animation) {
     return SizeTransition(
       sizeFactor: animation,
       child: Card(
@@ -78,31 +98,31 @@ class BodyLayoutState extends State<BodyLayout> {
             item,
             style: TextStyle(fontSize: 20),
           ),
+          onLongPress: () => _removeSingleItem(index),
         ),
       ),
     );
   }
 
-  void _insertSingleItem() {
-    String newItem = "Planet";
-    // Arbitrary location for demonstration purposes
-    int insertIndex = 2;
-    // Add the item to the data list.
-    _data.insert(insertIndex, newItem);
-    // Add the item visually to the AnimatedList.
-    _listKey.currentState.insertItem(insertIndex);
+  void _insertSingleItem(text) {
+    _textController.clear();
+    todoInputFocusNode.requestFocus();
+
+    if (text.length < 1) {
+      return;
+    }
+
+    _data.insert(0, text);
+    _listKey.currentState.insertItem(0);
   }
 
-  void _removeSingleItem() {
-    int removeIndex = 2;
-    // Remove item from data list but keep copy to give to the animation.
-    String removedItem = _data.removeAt(removeIndex);
-    // This builder is just for showing the row while it is still
-    // animating away. The item is already gone from the data list.
+  void _removeSingleItem(index) {
+    String removedItem = _data.removeAt(index);
+
     AnimatedListRemovedItemBuilder builder = (context, animation) {
-      return _buildItem(removedItem, animation);
+      return _buildItem(removedItem, index, animation);
     };
-    // Remove the item visually from the AnimatedList.
-    _listKey.currentState.removeItem(removeIndex, builder);
+
+    _listKey.currentState.removeItem(index, builder);
   }
 }
