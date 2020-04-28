@@ -28,11 +28,15 @@ class BodyLayout extends StatelessWidget {
 
 // replace this function with the code in the examples
 Widget _myListView(BuildContext context) {
-  return ListView.builder(
+  return ListView.separated(
+    itemCount: 1000,
     itemBuilder: (context, index) {
       return ListTile(
         title: Text('row $index'),
       );
+    },
+    separatorBuilder: (context, index) {
+      return Divider();
     },
   );
 }
